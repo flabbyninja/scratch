@@ -1,0 +1,13 @@
+{
+    "extends": "standard",
+    "rules" : {
+        "indent": [2, 4],
+        "semi": ["error", "always"],
+        "semi-style": ["error", "last"],
+        "space-before-function-paren": ["error", {
+            "anonymous": "always",
+            "named": "never",
+            "asyncArrow": "always"
+        }]
+    }
+}
