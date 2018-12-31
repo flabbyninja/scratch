@@ -1,3 +1,3 @@
 # scratch
 
-Code snippets for language features and behaviours, including utility scripts and config that help with faster and standardised development, or just save me some time.
+Set of code snippets for language features / behaviours, including utility scripts and config for faster and standardised development, or just to save some time.
