@@ -8,7 +8,7 @@ Secure an entire directory of files, individually, using GPG. This wraps the pro
 
 This was written to run on `git-bash` in Windows 10. It should run fine in other Linux distributions or setups with little to no changes if needed.
 
-Also, spaces in filename are usually evil. There's a helper script here to help you get rid of them. Just replace them with underscores. It will save you so much pain over time. Run something like this and feel clean again...
+Also, spaces in filenames are usually evil. There's a simple script here to help you get rid of them. It just replaces spaces with underscores. It'll save you so much pain over time, so run something like this and feel clean again...
 
 `find . -type f -name '* *' -exec remove_file_spaces.sh {} \;`
 
