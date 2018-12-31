@@ -1,4 +1,6 @@
-# Changing the Git history of your repository using a script (via GitHub)
+# Git Author Rewrite
+
+## Changing the Git history of your repository using a script (via GitHub)
 
 Note: Running this script rewrites history for all repository collaborators. After completing these steps, any person with forks or clones must fetch the rewritten history and rebase any local changes into the rewritten history.
 
