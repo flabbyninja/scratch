@@ -1,9 +1,6 @@
 # Scripts
 # Useful scripts for various functions
 
-## `git-author-rewrite.sh`
-### Changing the Git history of your repository using a script (via GitHub)
-
 Small set of scripts that help save time or repeat tasks.
 
 * `git_author_rewrite`: rewrite the author tag on git commits when they've been checked in under the wrong id
