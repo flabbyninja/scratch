@@ -1,3 +1,3 @@
 # Config
 
-Useful config that can help with configuring IDE's and development tools.
+Useful config to speed up configuring IDE's and dev tools in a consistent way.
