@@ -1,6 +1,8 @@
-#!/bin/sh
+#!/usr/bin/env bash
+#
 # Encrypt directory full of files using GPG symmetric encryption, with password provided at runtime.
 # Creates timestamped tgz backup of source data as a backup.
+# Was written to run from git bash on Windows, so may need some tweaks for other distributions
 
 scriptname=`basename $0`
 
@@ -17,9 +19,9 @@ checkDirectoryHasFiles() {
 }
 
 capturePassword() {
-    read -p "Password:" -es password
+    read -es -p "Password:" password
     echo -e "\nok"
-    read -p "Password:" -es password2
+    read -es -p "Password:" password2
     echo -e "\nok"
     if [ "$password" == "$password2" ]; then
         passwordvalid=true
@@ -33,10 +35,11 @@ createBackupArchive() {
     dirlist=$2
 
     # Create directory with backup_datestamp
-    rootdirame="backup"
-    backupdir=$rootdirname"_"$(date +"%Y%m%d%H%M%S")
-    fqbackupdir=$dir"/"$backupdir
+    rootbackupdirname="backup"_$dir
     backupdestination=".."
+    backupdir=$rootbackupdirname"_"$(date +"%Y%m%d%H%M%S")
+    fqbackupdir=$backupdestination"/"$backupdir
+    
     echo "Backing up to ${fqbackupdir}"
 
     if [ ! -d $fqbackupdir ]; then
@@ -48,12 +51,15 @@ createBackupArchive() {
         cp $file $fqbackupdir
     done
 
-    tar zcvf $fqbackupdir.tgz $backupdir
+    tar zcf $backupdir.tgz $fqbackupdir
     rm -rf $fqbackupdir
+
+    echo "Backup complete to ${fqbackupdir}.tgz"
 }
 
 doEncryption() {
-    dir=$1
+    # Strip trailing slash, if present, from dir name
+    dir=${1%/}
     pass=$2
     dirlist=(`find $dir -type f`)
 
@@ -68,10 +74,14 @@ doEncryption() {
             gpg --batch --pinentry-mode loopback --passphrase=$pass -c $i
             rm $i
             mv $i".gpg" $i
+            echo "${i}: encrypted and secured"
         else
-            echo "${i} already encrypted. Skipping encryption step and leaving file unchanged"
+            echo "${i} already encrypted. Skipping encryption and leaving file unchanged"
         fi
     done
+
+    echo "Encryption of directory (${dir}) complete"
+    echo "Unsecured backup files should be removed or otherwise secured"
 }
 
 # Validate parameters
