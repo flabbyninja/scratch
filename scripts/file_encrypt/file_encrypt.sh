@@ -72,9 +72,13 @@ doEncryption() {
     do
         if [ "$(file -b "$i")" != "GPG symmetrically encrypted data (AES cipher)" ]; then
             gpg --batch --pinentry-mode loopback --passphrase=$pass -c $i
-            rm $i
-            mv $i".gpg" $i
-            echo "${i}: encrypted and secured"
+            if [ $? -ne 0 ]; then
+                echo "gpg error processing $i: File has not been changed. Please verify status"
+            else
+                rm $i
+                mv $i".gpg" $i
+                echo "${i}: Encrypted and secured"
+            fi
         else
             echo "${i} already encrypted. Skipping encryption and leaving file unchanged"
         fi
