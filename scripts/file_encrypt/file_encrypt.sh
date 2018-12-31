@@ -70,7 +70,8 @@ doEncryption() {
 
     for i in "${dirlist[@]}"
     do
-        if [ "$(file -b "$i")" != "GPG symmetrically encrypted data (AES cipher)" ]; then
+        filetype=$(file -b "$i")
+        if [ "${filetype:0:32}" != "GPG symmetrically encrypted data" ]; then
             gpg --batch --pinentry-mode loopback --passphrase=$pass -c $i
             if [ $? -ne 0 ]; then
                 echo "gpg error processing $i: File has not been changed. Please verify status"
