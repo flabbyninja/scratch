@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# Simple script to add file extension to a bunch of files. This can be
+# specified, or derived at a file by file level
 shopt -s nullglob
 scriptname=`basename $0`
 
