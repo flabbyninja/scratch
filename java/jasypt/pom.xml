@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.flabbyninja</groupId>
+    <artifactId>jasypt</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>jaspyt</name>
+    <description>Jasypt helper utilities for custom encryptor config</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+        <bouncycastle.version>1.63</bouncycastle.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-ext-jdk15on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jasypt</groupId>
+            <artifactId>jasypt</artifactId>
+            <version>1.9.2</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>com.flabbyninja.util.Encryptor</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
