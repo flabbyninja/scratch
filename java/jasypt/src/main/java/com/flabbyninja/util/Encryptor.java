@@ -8,7 +8,15 @@ import java.security.Security;
 
 public class Encryptor {
 
+    private final static String USAGE = "Usage: java -jar <jarname> <encrypt | decrypt> <data> <passphrase>";
+
+    enum Operation {
+        ENCRYPT,
+        DECRYPT
+    }
+
     private static PooledPBEStringEncryptor initialiseEncryptor(String passphrase) {
+        Security.addProvider(new BouncyCastleProvider());
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
         config.setPassword(passphrase);
@@ -23,17 +31,30 @@ public class Encryptor {
     }
 
     public static void main(String[] args) {
-        if (args.length < 2) {
-            System.out.println("Usage: java -jar <jarname> <data to be encrypted> <passphrase>");
+        if (args.length != 3) {
+            System.out.println(USAGE);
             System.exit(-1);
         }
 
-        String data_in_clear = args[0];
-        String passphrase = args[1];
+        String operation = args[0];
+        String data_in_clear = args[1];
+        String passphrase = args[2];
 
-        Security.addProvider(new BouncyCastleProvider());
         PooledPBEStringEncryptor encryptor = initialiseEncryptor(passphrase);
-        String encryptedValue = encryptor.encrypt(data_in_clear);
-        System.out.println(encryptedValue);
+
+        if (operation.equalsIgnoreCase(Operation.ENCRYPT.toString())) {
+            completeOperation(passphrase, Operation.ENCRYPT, encryptor.encrypt(data_in_clear));
+        } else if (operation.equalsIgnoreCase(Operation.DECRYPT.toString())) {
+            completeOperation(passphrase, Operation.DECRYPT, encryptor.decrypt(data_in_clear));
+        } else {
+            System.out.println(USAGE);
+            System.out.println("Error: Invalid operation chosen (" + operation + ")");
+            System.exit(-1);
+        }
+    }
+
+    private static void completeOperation(String passphrase, Operation operation, String processedData) {
+        System.out.println("Mode: " + operation.toString());
+        System.out.println(processedData);
     }
 }
