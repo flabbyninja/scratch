@@ -3,6 +3,7 @@ package com.flabbyninja.util;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
+import org.jasypt.iv.RandomIvGenerator;
 
 import java.security.Security;
 
@@ -27,6 +28,7 @@ public class Encryptor {
         config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
         config.setStringOutputType("base64");
         encryptor.setConfig(config);
+        encryptor.setIvGenerator(new RandomIvGenerator());
         return encryptor;
     }
 

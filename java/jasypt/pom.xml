@@ -12,7 +12,8 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <bouncycastle.version>1.63</bouncycastle.version>
+        <bouncycastle.version>1.64</bouncycastle.version>
+        <jasypt.version>1.9.3</jasypt.version>
     </properties>
 
     <dependencies>
@@ -24,12 +25,20 @@
         <dependency>
             <groupId>org.jasypt</groupId>
             <artifactId>jasypt</artifactId>
-            <version>1.9.2</version>
+            <version>${jasypt.version}</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
