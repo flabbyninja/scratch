@@ -21,5 +21,5 @@ else
     unset AWS_ACCESS_KEY_ID
     unset AWS_SECRET_ACCESS_KEY
     unset AWS_SESSION_TOKEN
-    echo 'Environment to standard AWS profile'
+    echo 'Environment reset to standard AWS profile'
 fi
