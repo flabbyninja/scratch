@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hello-ingress
+  annotations:
+    nginx.org/rewrites: "serviceName=ingress-nginx/sj-nginx-ingress-nginx-ingress rewrite=/;"
+spec:
+  rules:
+  - http:
+      paths:
+        - path: /
+          backend:
+            serviceName: hello-service-cluster
+            servicePort: 3000

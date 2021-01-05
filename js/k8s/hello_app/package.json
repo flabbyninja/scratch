@@ -1,0 +1,18 @@
+{
+  "name": "hello_app",
+  "version": "1.0.0",
+  "description": "Simple app that returns hello. Used for validating deployments etc/",
+  "main": "app.js",
+  "author": "Flabby Ninja <dev@flabbyninja.net>",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.6"
+  },
+  "scripts": {
+    "start": "nodemon app.js",
+    "build": "docker build -t flabbyninja/hello_app .",
+    "push": "docker push flabbyninja/hello_app:latest"
+  }
+}

@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myhello
+  labels:
+    app: myhello
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: myhello
+  template:
+    metadata:
+      labels:
+        app: myhello
+    spec:
+      containers:
+        - name: myhello
+          image: docker.io/flabbyninja/hello_app:latest
+          ports:
+            - containerPort: 3000
