@@ -3,29 +3,23 @@ $targetServiceMap = @{
   "BattleEye" = "beservice"
 }
 
-foreach ($key in $targetServiceMap.Keys) {
+foreach ($serviceKey in $targetServiceMap.Keys) {
   $serviceName = $targetServiceMap[$key]
-  $message = "Processing service {0}({1})" -f $key, $serviceName
-  Write-Output $message    
+  $message = "Processing service {0} ({1}) " -f $key, $serviceName
+  Write-Host "Processing service $serviceKey($serviceName)"   
   $cimInstanceParams = @{
       ClassName = "Win32_Service"
       filter = "Name= '{0}'" -f $serviceName
   }      
-  $serviceAvailable = get-ciminstance @cimInstanceParams
-  Write-Output $serviceAvailable
+  $servicePayload = get-ciminstance @cimInstanceParams
+  If ($servicePayload -ne $null) {    
+    Write-Host "Service $serviceKey ($serviceName) exists. Attempting removal..."
+    $result = remove-ciminstance -InputObject $servicePayload
+    Write-Host "Service $serviceKey ($serviceName) removal request completed"
+  }
+  else {
+    Write-Host "Service $serviceKey ($serviceName) not found. No action needed."
+  }  
 }
 
-# $EasyAntiCheat = get-ciminstance win32_service -filter "name='EasyAntiCheat'" 
-#If ($EasyAntiCheat -ne $null) {
-  #Write-Output "EasyAnticheat service found"
-#}
-#else {
-#    Write-Output "EasyAnticheat service not found"
-#}
-# remove-ciminstance -InputObject $EasyAntiCheat
-# Write-Host $Result.ExitCode
-# $BattleEye = get-ciminstance win32_service -filter "name='beservice'" 
-# remove-ciminstance -InputObject $BattleEye
-# Write-Host $Result.ExitCode
-
-# Read-Host -Prompt "Press Enter to exit"
+Read-Host -Prompt "Press Enter to exit"
