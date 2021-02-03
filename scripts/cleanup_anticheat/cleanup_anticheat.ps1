@@ -4,8 +4,8 @@ $targetServiceMap = @{
 }
 
 foreach ($serviceKey in $targetServiceMap.Keys) {
-  $serviceName = $targetServiceMap[$key]
-  $message = "Processing service {0} ({1}) " -f $key, $serviceName
+  $serviceName = $targetServiceMap[$serviceKey]
+  $message = "Processing service {0} ({1}) " -f $serviceKey, $serviceName
   Write-Host "Processing service $serviceKey($serviceName)"   
   $cimInstanceParams = @{
       ClassName = "Win32_Service"
