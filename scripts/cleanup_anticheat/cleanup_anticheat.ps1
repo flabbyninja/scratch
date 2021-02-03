@@ -22,4 +22,4 @@ foreach ($serviceKey in $targetServiceMap.Keys) {
   }  
 }
 
-Read-Host -Prompt "Press Enter to exit"
+Read-Host -Prompt "Press Enter"
