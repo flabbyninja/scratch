@@ -2,15 +2,15 @@
 
 ## Why?
 
-backup image of Raspberry Pi boot disk, and allow it to be shrunk down to save space. Intended to be added to crontab to run regular, schedules backups of OS and data. None of the shrinking code is mine; this uses PiShrink on the resulting image to reduce it down to the minimum size required.
+Create a backup image of a Raspberry Pi boot disk, and allow it to be shrunk to save space. Intended to be added to `crontab` to run regular, scheduled backups of OS and data. This uses `PiShrink` on the resulting image, reducing it to the minimum size required.
 
-When image is restored to SD card and booted, it will resize to fill the available space, depending on the size available on the device.
+When an image is restored to an SD card and booted, it will resize to fill the available space, depending on the size available on the device.
 
-This is a modified version of a backup script originally written by Kristofer KÃ¤llsbo (www.hackviking.com, 2017), adding usage details, PiShrink and new configurable parameters.
+This is a modified version of a backup script originally written by Kristofer Källsbo (www.hackviking.com, 2017), adding usage details, PiShrink and new configurable parameters.
  
 ## Prerequisites
 
-Checkout PiShrink from https://github.com/Drewsif/PiShrink. This script expects PiShrink to be available in a subdirectory called `PiShrink`, relative to the main script.
+Checkout `PiShrink` from https://github.com/Drewsif/PiShrink. This script expects PiShrink to be available in a subdirectory called `PiShrink`, relative to the main script.
 
 ## Usage
 
@@ -36,4 +36,4 @@ Resulting image files will be stored in `backup_dir`, and named in the format `$
 
 e.g. `rpi-server1.20210512_143557.img`
 
-Files can be restored directly to a Raspberry Pi SD card, and when booted will dynamically resize to the maximum size supported by the SD card.
+Files can be restored directly to a Raspberry Pi SD card, and when booted it will dynamically resize to the maximum size supported by the SD card.
