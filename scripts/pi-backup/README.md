@@ -6,7 +6,7 @@ Create a backup image of a Raspberry Pi boot disk, and allow it to be shrunk to 
 
 When an image is restored to an SD card and booted, it will resize to fill the available space, depending on the size available on the device.
 
-This is a modified version of a backup script originally written by Kristofer Källsbo (www.hackviking.com, 2017), adding usage details, PiShrink and new configurable parameters.
+This is a modified version of a backup script originally written by Kristofer Källsbo (www.hackviking.com, 2017), with additional usage details, calling out to PiShrink and new configurable parameters for output and shrink behaviour.
  
 ## Prerequisites
 
