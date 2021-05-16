@@ -6,7 +6,7 @@ backup image of Raspberry Pi boot disk, and allow it to be shrunk down to save s
 
 When image is restored to SD card and booted, it will resize to fill the available space, depending on the size available on the device.
 
-This is a modified version of a base script originally written by Kristofer KÃ¤llsbo 2017 www.hackviking.com
+This is a modified version of a backup script originally written by Kristofer KÃ¤llsbo (www.hackviking.com, 2017), adding usage details, PiShrink and new configurable parameters.
  
 ## Prerequisites
 
@@ -14,12 +14,26 @@ Checkout PiShrink from https://github.com/Drewsif/PiShrink. This script expects 
 
 ## Usage
 
-`system_backup_shrink.sh <<blah> <blah> <blah>`
+`system_backup_shrink.sh <shrink_image> <backup_path> <retention_days>`
 
-### crontab setup
+| Parameter | Meaning | Example |
+|-----------|---------|---------|
+| `shrink_image` | Run `PiShrink` after taking raw image, to minimise overall image size. Default is true | Set to `false` or any non-`true` value if you don't want the image minimised. |
+| `backup_path` | Path where backup image file will be stored. Default is `/mnt/backup/raw`. | `/data/backups/current` |
+| `retention_days` | How many days to keep backups for. Any backups present in `backup_dir` older than this will be deleted. Default is 45 days. | `30` |
 
-Run backup every Sun, Wed and Friday at 03:45
+## `crontab` Setup
+
+To run backup every Sun, Wed and Friday at 03:45, with output sent to `/var/log/system_backup.log`, add the following:
 
 ```
 45 3 * * 0,3,5 /path/to/system_backup_shrink.sh >> /var/log/system_backup.log 2>&1
 ```
+
+## Output
+
+Resulting image files will be stored in `backup_dir`, and named in the format `$HOSTNAME.$(date +%Y%m%d_%H%M%S).img`
+
+e.g. `rpi-server1.20210512_143557.img`
+
+Files can be restored directly to a Raspberry Pi SD card, and when booted will dynamically resize to the maximum size supported by the SD card.
