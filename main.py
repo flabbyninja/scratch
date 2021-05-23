@@ -1,9 +1,10 @@
 import zipfile
 import re
 import random
+import datetime
 
 INPUT_ZIP_NAME = 'wireguard_windows_all.zip'
-OUTPUT_ZIP_NAME = 'output.zip'
+OUTPUT_ZIP_PREFIX = 'output'
 CONFIG_REGEX = 'mullvad-[a-z]{2}[0-9]{1,3}.conf$'
 DESIRED_COUNTRIES = ['gb', 'us', 'se']
 ENTRIES_PER_COUNTRY = 3
@@ -30,6 +31,7 @@ def create_country_dict(filelist):
 
   return country_dict
 
+# TODO: migrate to set in case random chooses same entry multiple times
 def get_random_unique_from_list(data_list, num):
   random_list = []
   list_len = len(data_list)
@@ -41,7 +43,6 @@ def get_random_unique_from_list(data_list, num):
   return random_list
 
 def select_random_entries(dict, filterlist, num):
-  print('Filtering output for countries', filterlist)
   full_list = []
   for key in filterlist:
     if key in dict:
@@ -51,6 +52,7 @@ def select_random_entries(dict, filterlist, num):
   return full_list
 
 def main():
+  print('Reading input from source file', INPUT_ZIP_NAME)
   with zipfile.ZipFile(INPUT_ZIP_NAME, 'r') as input_zip_file:
     filelist = input_zip_file.namelist()
 
@@ -58,11 +60,16 @@ def main():
     country_dict = create_country_dict(filelist)
 
     # Select random entries from each country up to limit provided per country
+    print('Filtering output for', ENTRIES_PER_COUNTRY, 'entries from countries', DESIRED_COUNTRIES)
     filtered_file_list = select_random_entries(country_dict, DESIRED_COUNTRIES, ENTRIES_PER_COUNTRY)
 
     # Pull selected config from source, and write into new generated zip
-    print('Populating', OUTPUT_ZIP_NAME, 'with config from ', filtered_file_list)
-    create_filtered_zip(input_zip_file, filtered_file_list, OUTPUT_ZIP_NAME)
+    print('Populating', OUTPUT_ZIP_PREFIX, 'with config from ', filtered_file_list)
+    today = datetime.datetime.now();
+    output_zip_file = today.strftime(OUTPUT_ZIP_PREFIX + '_%y%m%d_%H%M%S.zip')
+    print('Writing filtered contents to', output_zip_file)
+    create_filtered_zip(input_zip_file, filtered_file_list, output_zip_file)
+    print('Output file successully created')
 
 if __name__ == '__main__':
   main()
