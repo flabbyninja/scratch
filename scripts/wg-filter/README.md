@@ -18,4 +18,4 @@ Runs under Python3. Doesn't require anything outside the Python Standard Library
 
 ## Output
 
-Compressed ZIP file containing selection of conf files from the chosen country. This will contain a random set up to the number specified, or the full set if number chosen is greater than those available to choose from.
+Compressed ZIP file containing selection of `.conf` files from the chosen country. This will contain a random set, up to the number specified, or the full set if number chosen is greater than those available to choose from.
