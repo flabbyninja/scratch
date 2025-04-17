@@ -1,7 +1,6 @@
 #!/bin/sh
-# use like this cat ips.txt |  xargs -I % route add -net % 97.9.255.253
 #
-# To manually eeset all to default
+# To manually reset all to default
 # route -n flush
 # sudo ifconfig en0 down
 # sudo ifconfig en0 up
