@@ -61,12 +61,16 @@ delete=0
 add=0
 for ip in $(littlesnitch log-traffic -b $START_TIME -e $END_TIME | grep "$APP_NAME" | cut -f 4 -d , | sort -u)
 do
-    route delete -net $ip $DEFAULT_GATEWAY
-    delete=$((delete+1))
+    if route delete -net $ip $DEFAULT_GATEWAY
+    then
+        delete=$((delete+1))
+    fi
     if  [ -n $SUBCOMMAND ] && [ $SUBCOMMAND != "delete" ]
     then
-        add=$((add+1))
-        route add -net $ip $DEFAULT_GATEWAY
+        if route add -net $ip $DEFAULT_GATEWAY
+        then
+            add=$((add+1))
+        fi
     fi
 done
 
