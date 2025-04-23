@@ -1,5 +1,13 @@
 #!/bin/sh
 #
+# Allows the use of a VPN while directly routing a set of IP addresses used by an application, letting them bypass the VPN. 
+# Pulls back all connections made using an app over a specific number of days. This data is pulled from the Little Snitch CLI, so that needs 
+# installed and enabled. Gets the default gateway for the configured network interface Routes the connection for all IP's through this
+# default gateway. 
+#
+# set-routes.sh <num_days (default 5)> <subcommand (default refresh)>
+#
+#
 # To manually reset all to default
 # route -n flush
 # sudo ifconfig en0 down
@@ -10,13 +18,25 @@ TRAFFIC_HISTORY_DAYS=5
 APP_NAME="/Library/Application Support/Citrix Receiver/Citrix Viewer.app/Contents/MacOS/Citrix Viewer"
 NET_INTERFACE=en0
 
+# Parameters
+
+# Number of days traffic history to pull back. Default is 5
 if [ -z "$1" ]
+    then
+        TRAFFIC_HISTORY_DAYS=5
+    else
+        TRAFFIC_HISTORY_DAYS=$1
+fi
+
+# Subcommand for operation. Default is refresh (delete any route for IP, then add new route in)
+if [ -z "$2" ]
     then
         SUBCOMMAND="refresh"
     else
         SUBCOMMAND=$1
 fi
 
+# Calculate start and end dates based on traffic history parameter
 START_TIME=$(date -j -v-$(($TRAFFIC_HISTORY_DAYS))d '+%Y-%m-%d 00:00:00')
 END_TIME=$(date -j '+%Y-%m-%d 00:00:00')
 
@@ -44,4 +64,5 @@ do
     fi
 done
 
+# Output summary of what has been added and removed
 echo "IPs added: $add, IPs deleted: $delete"
