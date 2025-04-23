@@ -59,16 +59,16 @@ echo "Traffic parsing previous $TRAFFIC_HISTORY_DAYS days (Start Time: $START_TI
 # remove existing rules if they exist for these IP's
 delete=0
 add=0
-# for ip in $(littlesnitch log-traffic -b $START_TIME -e $END_TIME | grep "$APP_NAME" | cut -f 4 -d , | sort -u)
-# do
-#     route delete -net $ip $DEFAULT_GATEWAY
-#     delete=$((delete+1))
-#     if  [ -n $SUBCOMMAND ] && [ $SUBCOMMAND != "delete" ]
-#     then
-#         add=$((add+1))
-#         route add -net $ip $DEFAULT_GATEWAY
-#     fi
-# done
+for ip in $(littlesnitch log-traffic -b $START_TIME -e $END_TIME | grep "$APP_NAME" | cut -f 4 -d , | sort -u)
+do
+    route delete -net $ip $DEFAULT_GATEWAY
+    delete=$((delete+1))
+    if  [ -n $SUBCOMMAND ] && [ $SUBCOMMAND != "delete" ]
+    then
+        add=$((add+1))
+        route add -net $ip $DEFAULT_GATEWAY
+    fi
+done
 
 # Output summary of what has been added and removed
 echo "IPs added: $add, IPs deleted: $delete"
