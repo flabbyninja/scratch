@@ -14,9 +14,11 @@
 # sudo ifconfig en0 up
 
 # Config
-TRAFFIC_HISTORY_DAYS=5
+DEFAULT_TRAFFIC_HISTORY_DAYS=5
 APP_NAME="/Library/Application Support/Citrix Receiver/Citrix Viewer.app/Contents/MacOS/Citrix Viewer"
 NET_INTERFACE=en0
+# whether to output extra info log messages
+INFO=true
 
 # Regexp to validate integer passed for traffic history days
 re='^[1-9][0-9]*$'
@@ -25,13 +27,15 @@ re='^[1-9][0-9]*$'
 
 # Number of days traffic history to pull back. Default is 5
 if [[ -z "$1" ]]
-    then
-        echo "No traffic history parameter set: using default of ${TRAFFIC_HISTORY_DAYS}"
+then
+    echo "No traffic history parameter set: using default of ${DEFAULT_TRAFFIC_HISTORY_DAYS}"
+    TRAFFIC_HISTORY_DAYS=$DEFAULT_TRAFFIC_HISTORY_DAYS
 elif [[ $1 =~ $re ]]
-    then 
-        TRAFFIC_HISTORY_DAYS=$1
+then 
+    TRAFFIC_HISTORY_DAYS=$1
 else 
-    echo "Provided traffic history parameter is not an integer (${1}): using default of ${TRAFFIC_HISTORY_DAYS}"
+    echo "Provided traffic history parameter is not an integer (${1}): using default of ${DEFAULT_TRAFFIC_HISTORY_DAYS}"
+    TRAFFIC_HISTORY_DAYS=$DEFAULT_TRAFFIC_HISTORY_DAYS
 fi
 
 # Subcommand for operation. Default is refresh (delete any route for IP, then add new route in)
@@ -43,18 +47,26 @@ if [[ -z "$2" ]]
 fi
 
 # Calculate start and end dates based on traffic history parameter
-START_TIME=$(date -j -v-$(($TRAFFIC_HISTORY_DAYS))d '+%Y-%m-%d 00:00:00')
+START_TIME=$(date -j -v-$(($TRAFFIC_HISTORY_DAYS))d '+%Y-%m-%d 00:00:00' 2> /dev/null)
+if [[ ! $? = 0 ]]
+then
+    echo "ERROR: Provided parameter invalid: ${TRAFFIC_HISTORY_DAYS} days is too far in past. Will use default of ${DEFAULT_TRAFFIC_HISTORY_DAYS} days"
+    TRAFFIC_HISTORY_DAYS=$DEFAULT_TRAFFIC_HISTORY_DAYS
+    START_TIME=$(date -j -v-$(($TRAFFIC_HISTORY_DAYS))d '+%Y-%m-%d 00:00:00')
+fi
 END_TIME=$(date -j '+%Y-%m-%d 00:00:00')
 
 # get default gateway for en0
 DEFAULT_GATEWAY=`route -n get -ifscope $NET_INTERFACE default | grep gateway | awk '{print $2}'`
 
 # Output status info
-echo "Processing input IP's from Little Snitch Traffic Log using configured gateway"
-echo "Activated Subcommand: $SUBCOMMAND"
-echo "Default gateway for ${NET_INTERFACE} set as ${DEFAULT_GATEWAY}" 
-echo "Application set to $APP_NAME"
-echo "Traffic parsing previous $TRAFFIC_HISTORY_DAYS days (Start Time: $START_TIME, End Time: $END_TIME)"
+if [[ $INFO = true ]]
+then
+    echo "INFO: Parsing previous $TRAFFIC_HISTORY_DAYS days (Start Time: $START_TIME, End Time: $END_TIME)"
+    echo "INFO: Default gateway for ${NET_INTERFACE}: ${DEFAULT_GATEWAY}" 
+    echo "INFO: Application: $APP_NAME"
+    echo "INFO: Subcommand: $SUBCOMMAND"
+fi
 
 # remove existing rules if they exist for these IP's
 delete=0
