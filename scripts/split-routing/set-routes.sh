@@ -15,8 +15,8 @@
 
 # Config
 DEFAULT_TRAFFIC_HISTORY_DAYS=5
-APP_NAME="/Applications/Citrix Workspace.app/Contents/CitrixWorkspaceApps/Citrix Viewer.app/Contents/MacOS/Citrix Viewer"
 NET_INTERFACE=en0
+
 # whether to output extra info log messages
 INFO=true
 
@@ -71,20 +71,30 @@ fi
 # remove existing rules if they exist for these IP's
 delete=0
 add=0
-for ip in $(littlesnitch log-traffic -b $START_TIME -e $END_TIME | grep "$APP_NAME" | cut -f 4 -d , | sort -u)
-do
-    if route delete -net $ip $DEFAULT_GATEWAY
-    then
-        delete=$((delete+1))
-    fi
-    if  [ -n $SUBCOMMAND ] && [ $SUBCOMMAND != "delete" ]
-    then
-        if route add -net $ip $DEFAULT_GATEWAY
-        then
-            add=$((add+1))
-        fi
-    fi
-done
+app=0
 
-# Output summary of what has been added and removed
-echo "IPs added: $add, IPs deleted: $delete"
+# define list of applications to route outside the VPN
+while read current_app
+do
+    echo "Processing app: $current_app"
+    app=$((app+1))
+    for ip in $(littlesnitch log-traffic -b $START_TIME -e $END_TIME | grep "$current_app" | cut -f 4 -d , | sort -u)
+    do
+        if route delete -net $ip $DEFAULT_GATEWAY
+        then
+            delete=$((delete+1))
+        fi
+        if  [ -n $SUBCOMMAND ] && [ $SUBCOMMAND != "delete" ]
+        then
+            if route add -net $ip $DEFAULT_GATEWAY
+            then
+                add=$((add+1))
+            fi
+        fi
+    done
+done <<EOF
+"/Applications/Citrix Workspace.app/Contents/CitrixWorkspaceApps/Citrix Viewer.app/Contents/MacOS/Citrix Viewer"
+EOF
+
+# Output total summary of what has been added and removed
+echo "IPs added: $add, IPs deleted: $delete across $app application"
