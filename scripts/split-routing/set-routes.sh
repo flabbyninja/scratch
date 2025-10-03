@@ -15,7 +15,7 @@
 
 # Config
 DEFAULT_TRAFFIC_HISTORY_DAYS=5
-APP_NAME="/Library/Application Support/Citrix Receiver/Citrix Viewer.app/Contents/MacOS/Citrix Viewer"
+APP_NAME="/Applications/Citrix Workspace.app/Contents/CitrixWorkspaceApps/Citrix Viewer.app/Contents/MacOS/Citrix Viewer"
 NET_INTERFACE=en0
 # whether to output extra info log messages
 INFO=true
