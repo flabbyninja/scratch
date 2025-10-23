@@ -4,7 +4,7 @@
 
 if [%1%] == [] (
   echo Password not specified
-  echo Usage: %0% <password>
+  echo Usage: %0% ^<password^>
   exit /b 1
 )
 
