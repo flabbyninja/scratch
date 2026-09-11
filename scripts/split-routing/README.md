@@ -2,7 +2,7 @@
 
 ## Why?
 
-Support the ability to route connections from a named app via a different gateway on Mac OS. Main use case is when a VPN is active, to configure connections used by the app to bypass VPN routing, while all others route via VPN. This is useful where the VPN client doesn't support app-based split tunelling.
+Allow connections from a named app to be routed via a different gateway on Mac OS. The main use case is when a VPN is active, you want connections used by a specific app to bypass VPN routing, with all others routed via VPN. This is useful where the VPN client doesn't support app-based split tunelling. This relies on a relatively static set of destinations that are used by the app.
 
 This script makes networking changes only to the current session. None of the changes are persisted, so will not survive a reboot. If in any doubt, just reboot and you're back to normal.
 
