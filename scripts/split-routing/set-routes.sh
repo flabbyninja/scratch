@@ -73,27 +73,41 @@ delete=0
 add=0
 app=0
 
-# define list of applications to route outside the VPN
 while read current_app
 do
     echo "Processing app: $current_app"
     app=$((app+1))
-    for ip in $(littlesnitch log-traffic -b $START_TIME -e $END_TIME | grep "$current_app" | cut -f 4 -d , | sort -u)
+    ip_list=$(littlesnitch log-traffic -b $START_TIME -e $END_TIME | grep -E "$current_app" | cut -f 4 -d , | sort -u)
+    while read ip        
     do
-        if route delete -net $ip $DEFAULT_GATEWAY
-        then
-            delete=$((delete+1))
+        # Validate IPv4 format: four octets, each 0-255
+        if [[ $ip =~ ^([0-9]{1,3}\.){3}[0-9]{1,3}$ ]]; then
+            # Additional check: each octet must be 0-255
+            valid=true
+            IFS='.' read -ra octets <<< "$ip"
+            for octet in "${octets[@]}"; do
+                if (( octet > 255 )); then
+                    valid=false
+                    break
+                fi
+            done
         fi
-        if  [ -n $SUBCOMMAND ] && [ $SUBCOMMAND != "delete" ]
-        then
-            if route add -net $ip $DEFAULT_GATEWAY
+        if $valid; then            
+            if route delete -net $ip $DEFAULT_GATEWAY
             then
-                add=$((add+1))
+                delete=$((delete+1))
+            fi
+            if  [ -n $SUBCOMMAND ] && [ $SUBCOMMAND != "delete" ]
+            then
+                if route add -net $ip $DEFAULT_GATEWAY
+                then
+                    add=$((add+1))
+                fi
             fi
         fi
-    done
+    done <<< "$ip_list"
 done <<EOF
-"/Applications/Citrix Workspace.app/Contents/CitrixWorkspaceApps/Citrix Viewer.app/Contents/MacOS/Citrix Viewer"
+,"/Applications/Citrix Workspace\.app/Contents/Frameworks/CitrixWorkspaceApps\.framework/Versions/[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/Helpers/CitrixWorkspaceApps/Citrix Viewer\.app/Contents/MacOS/Citrix Viewer"
 EOF
 
 # Output total summary of what has been added and removed
